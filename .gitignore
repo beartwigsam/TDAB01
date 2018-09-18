@@ -1,0 +1,4 @@
+.Rhistory/
+
+*.html
+!spec/*.html
