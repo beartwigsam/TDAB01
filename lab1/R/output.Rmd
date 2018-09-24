@@ -26,6 +26,7 @@ hist(v1, probability = TRUE, xlab="Value", col=v1col, main="Histogram of v1 and 
 hist(v2, probability = TRUE, xlab="Value", col=v2col, add=TRUE)
 legend("topleft", inset=0.02, c("V1", "V2"), fill=c(v1col, v2col), horiz=TRUE, cex=0.8)
 
+# Täthetsfunktion för normalfördelning
 v1.pdf <- (1 / sqrt(2 * pi * v1.sd^2)) * exp(-(v1 - v1.mean)^2 / (2 * v1.sd^2))
 v2.pdf <- (1 / sqrt(2 * pi * v2.sd^2)) * exp(-(v2 - v2.mean)^2 / (2 * v2.sd^2))
 hist(v1.pdf, probability = TRUE, xlab="Probability", 
@@ -37,3 +38,7 @@ legend("topleft", inset=0.02, c("V1", "V2"), fill=c(v1col, v2col), horiz=TRUE, c
 
 ### b)
 Skillnaden är att V2-grafen ser närmare ut som en standard normalfördelning jämfört med V1. Vi ser också i pdf-histogrammet att V2 efterliknar en lenare exponentiell funktion jämfört med V1.
+
+## Uppgift 2
+### a)
+
