@@ -12,3 +12,25 @@ hist(x4)
 
 x5 = rpois(10000, 10)
 hist(x5)
+
+y1 = runif(10000, 0, 1)
+hist(y1, breaks = 100)
+
+y2 = rexp(10000, 3)
+hist(y2, breaks = 100)
+
+y3 = rgamma(10000, 2, 1)
+hist(y3, breaks = 100)
+
+y4 = rt(10000, 3, 0)
+hist(y4, breaks = 100)
+
+y5 = rbeta(10000, 0.1, 0.1)
+hist(y5, breaks = 100)
+
+y6 = rbeta(10000, 1, 1)
+hist(y6, breaks = 100)
+
+y7 = rbeta(10000, 10, 5)
+hist(y7, breaks = 100)
+

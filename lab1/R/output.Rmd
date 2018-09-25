@@ -40,5 +40,112 @@ legend("topleft", inset=0.02, c("V1", "V2"), fill=c(v1col, v2col), horiz=TRUE, c
 Skillnaden är att V2-grafen ser närmare ut som en standard normalfördelning jämfört med V1. Vi ser också i pdf-histogrammet att V2 efterliknar en lenare exponentiell funktion jämfört med V1.
 
 ## Uppgift 2
+```{r}
+x1 = rbinom(n = 10000, size = 1, prob = 0.2)
+hist(x1)
+
+x2 = rbinom(10000, 20, 0.1)
+hist(x2)
+
+x3 = rbinom(10000, 20, 0.5)
+hist(x3)
+
+x4 = rgeom(10000, 0.1)
+hist(x4)
+
+x5 = rpois(10000, 10)
+hist(x5)
+
+y1 = runif(10000, 0, 1)
+hist(y1, breaks = 100)
+
+y2 = rexp(10000, 3)
+hist(y2, breaks = 100)
+
+y3 = rgamma(10000, 2, 1)
+hist(y3, breaks = 100)
+
+y4 = rt(10000, 3, 0)
+hist(y4, breaks = 100)
+
+y5 = rbeta(10000, 0.1, 0.1)
+hist(y5, breaks = 100)
+
+y6 = rbeta(10000, 1, 1)
+hist(y6, breaks = 100)
+
+y7 = rbeta(10000, 10, 5)
+hist(y7, breaks = 100)
+```
+
+## Uppgift 3
 ### a)
 
+```{r}
+col1 = rgb(0, 0, 255, max = 255, alpha = 125, names = "v1-graph")
+col2 = rgb(255, 0, 0, max = 255, alpha = 125, names = "v2-graph")
+
+x1    = rbinom(n = 1000, size = 10000, prob = 0.001)
+x1.dt = dbinom(x = 10000, size = 10000, prob = 0.001)
+hist(x1, col = col1, xlim = c(-1,30), breaks = 100)
+hist(x1.dt, col = col2, add=TRUE)
+
+x2 = rt(1000, 10000, 0)
+hist(x2, col = col2, breaks = 100)
+
+x1.2 = rnorm(1000, mean(x1), sqrt(var(x1)))
+hist(x1.2, col = col1, breaks = 100)
+
+```
+
+### b)
+#### Binomialfördelning
+Binomialfördelningen kan approximeras med en normalfördelning när n är tillräckligt stort.
+
+#### Student-t-fördelning
+Student-t-fördelningen närmar sig också en normalfördelning eftersom "svansen" blir mindre med större värde på v.
+
+### c)
+Normalfördelningen följer liknande mönster som x1 och x2.
+
+
+## Uppgift 4
+
+### a)
+```{r}
+stats = data(faithful)
+waiting = faithful[, 2]
+hist(waiting, probability = TRUE, breaks = 50, xlim=c(40, 100), ylim=c(0, 0.12))
+```
+
+### b)
+```{r}
+k <- 1:10000
+x1 = rbinom(10000, 1, 0.3)
+norm1 = rnorm(10000, 15, 3)
+norm2 = rnorm(10000, 4, 2)
+i = 1
+for(x in x1) 
+{
+  k[i] = sample(x * norm1 + (1 - x) * norm2, 1)
+  i = i + 1
+}
+hist(k, breaks=100)
+```
+
+### c)
+```{r}
+k <- 1:10000
+x1 = rbinom(10000, 1, 0.35)
+norm1 = rnorm(10000, 54, sqrt(20))
+norm2 = rnorm(10000, 79, sqrt(25))
+i = 1
+for(x in x1) 
+{
+  k[i] = sample(x * norm1 + (1 - x) * norm2, 1)
+  i = i + 1
+}
+hist(k, breaks=50, probability = TRUE, xlim=c(40, 100), ylim=c(0, 0.12))
+```
+
+## Uppgift 5
