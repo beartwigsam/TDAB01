@@ -1,16 +1,23 @@
 
-stats = data(faithful)
-waiting = faithful[, 2]
-hist(waiting, breaks = 50, probability = TRUE, xlim=c(40, 100), ylim=c(0, 0.12))
+Y.n = 10
+Y.p = 0.1
+Y = rbinom(10000, Y.n, Y.p)
+X = rnorm(10000, 0, 1)
 
-k <- 1:10000
-x1 = rbinom(10000, 1, 0.35)
-norm1 = rnorm(10000, 54, sqrt(20))
-norm2 = rnorm(10000, 79, sqrt(25))
-i = 1
-for(x in x1) 
-{
-  k[i] = sample(x * norm1 + (1 - x) * norm2, 1)
-  i = i + 1
-}
-hist(k, breaks=50, probability = TRUE, xlim=c(40, 100), ylim=c(0, 0.12))
+X.cmf = ecdf(X)
+Y.cmf = ecdf(Y)
+plot(X.cmf, col="blue")
+plot(Y.cmf, col="red", add = TRUE)
+
+#1
+pnorm(0, mean=0, sd=1)
+#2
+pnorm(1.0, mean=0, sd=1) - pnorm(-1.0, mean=0, sd=1)
+#3
+1 - pnorm(1.96, mean=0, sd=1)
+#4
+pbinom(9, 10, 0.1) - pbinom(1, 10, 0.1) # 9 och 1 eftersom det är "mindre än" och "större än" och det är diskreta värden.
+#5
+pbinom(0, 10, 0.1) - pbinom(-1, 10, 0.1) # -1 för tydlighet
+#6
+pbinom(10, 10, 0.1) - pbinom(0, 10, 0.1) # Eftersom nu så är det "mindre eller lika med"

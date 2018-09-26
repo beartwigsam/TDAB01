@@ -149,3 +149,65 @@ hist(k, breaks=50, probability = TRUE, xlim=c(40, 100), ylim=c(0, 0.12))
 ```
 
 ## Uppgift 5
+### a)
+```{r}
+Y.n = 10
+Y.p = 0.1
+Y = rbinom(10000, Y.n, Y.p)
+Y.d = dbinom(0, Y.n, Y.p)
+hist(Y)
+
+n = 0
+for(y in Y) 
+{
+  if(y == 0) {
+    n = n + 1
+  }
+}
+
+print(n)
+```
+
+### b)
+```{r}
+#1
+pnorm(0, mean=0, sd=1)
+#2
+pnorm(1.0, mean=0, sd=1) - pnorm(-1.0, mean=0, sd=1)
+#3
+1 - pnorm(1.96, mean=0, sd=1)
+#4
+pbinom(9, 10, 0.1) - pbinom(1, 10, 0.1) # 9 och 1 eftersom det är "mindre än" och "större än" och det är diskreta värden.
+#5
+pbinom(0, 10, 0.1) - pbinom(-1, 10, 0.1) # -1 för tydlighet
+#6
+pbinom(10, 10, 0.1) - pbinom(0, 10, 0.1) # Eftersom nu så är det "mindre eller lika med"
+```
+
+### c)
+```{r}
+Y.n = 10
+Y.p = 0.1
+Y = rbinom(10000, Y.n, Y.p)
+X = rnorm(10000, 0, 1)
+
+X.cmf = ecdf(X)
+Y.cmf = ecdf(Y)
+plot(X.cmf, col="blue")
+plot(Y.cmf, col="red", add = TRUE)
+
+#1
+X.cmf(0.0)
+#2
+X.cmf(1.0) - X.cmf(-1.0)
+#3
+1 - X.cmf(1.96)
+#4
+Y.cmf(9) - Y.cmf(1) # 9 och 1 eftersom det är "mindre än" och "större än" och det är diskreta värden.
+#5
+Y.cmf(0)-Y.cmf(-1) # -1 för tydlighet
+#6
+Y.cmf(10) - Y.cmf(0) # Eftersom nu så är det "mindre eller lika med" etc.
+```
+
+## Uppgift 6
