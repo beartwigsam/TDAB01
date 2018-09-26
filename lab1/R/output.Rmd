@@ -211,3 +211,163 @@ Y.cmf(10) - Y.cmf(0) # Eftersom nu så är det "mindre eller lika med" etc.
 ```
 
 ## Uppgift 6
+
+```{r}
+GS = rbinom(10000, 337, 0.1)
+NS.P = runif(10000, 0.02, 0.16)
+NS = rbinom(10000, 337, sample(NS.P))
+
+# a)
+GS.exp.errors = 0.1 * 337
+NS.exp.errors = mean(NS.P) * 337
+print(NS.exp.errors)
+print(GS.exp.errors)
+
+
+# b)
+NS.cmf = ecdf(NS)
+NS.cmf(GS.exp.errors)
+plot(NS.cmf, col="blue")
+
+GS.cmf = ecdf(GS)
+GS.cmf(GS.exp.errors)
+plot(GS.cmf, col="red", add=TRUE)
+abline(v=GS.exp.errors, col="grey", lwd=1, lty=2)
+
+# c)
+NS.p.50 = 1 - NS.cmf(50)
+GS.p.50 = 1 - GS.cmf(50)
+print(NS.p.50)
+print(GS.p.50)
+abline(v=50, col="grey", lwd=1, lty=2)
+```
+
+### a)
+Nya systemet: 30.43495
+
+Gamla systemet: 33.7
+
+### b)
+Det nya systemet ges av det blåa strecket och det gamla systemet ges av det röda. Utifrån grafen så ser vi då att det är upp till ca 60% (0.6) sannolikhet att det nya systemet presterar bättre än det gamla, då 60% 
+ av det nya systemets approximerade utfall presterade bättre än det förväntade antalet fel i det gamla systemet.
+
+### c)
+Nya systemet: ca 0.096
+
+Gamla systemet: ca 0.0026
+
+Detta vittnar om att det gamla systemet mer sällan presterar riktigt dåligt (enligt antagande), medan
+ det nya systemet istället oftare presterar riktigt bra.
+ 
+## Uppgift 7
+```{r}
+X = runif(100, 0, 1)
+Y = runif(100, 0, 1)
+
+villkor <- sqrt(X^2 + Y^2) < 1
+
+# a)
+plot(X[villkor], col="red")
+plot(Y[villkor], col="blue")
+
+# b)
+calcZ <- function(z, n){
+  return(4 * (z / n))
+}
+simXY <- function(b){
+  X <- runif(b, 0, 1)
+  Y <- runif(b, 0, 1)
+  villkor <- sqrt(X^2 + Y^2) < 1
+  return(calcZ(length(X[villkor]) + length(Y[villkor]), b))
+}
+
+simXY(10000)
+simXY(100000)
+simXY(1000000)
+```
+
+## a)
+
+## b)
+Vi tror att den närmar sig 2 * pi.
+
+## c)
+Oscillationerna verkar avta med fler samplingar d.v.s. differensen mellan talen blir mindre.
+
+## d)
+Integralen ger oss: [x^3 / 3](0 till 2) = 8/3 - 0 = 8/3
+
+## e)
+Approximationen ges av: 
+```{r}
+X <- runif(100000, 0, 2)
+Y <- runif(100000, 0, 4)
+IHat = mean(Y < X^2)
+print(IHat * 2 * 4)
+```
+Vilket är nära 8/3.
+
+## Uppgift 8
+
+## a)
+Binomialfördelning:
+```{r}
+n = 10
+p = 0.2
+print(n * p)
+```
+
+Gamma-fördelning:
+```{r}
+alpha = 2
+beta = 2
+print(alpha/beta)
+```
+
+## b)
+```{r}
+pullXBinom <- function(a.a){
+  b = vector()
+  for(a in a.a) {
+    X = rbinom(a, 10, 0.2)
+    X.mean = mean(X)
+    b = append(b, X.mean)
+  }
+  return(b)
+}
+
+pullYGamma <- function(a.a){
+  b = vector()
+  for(a in a.a) {
+    Y = rgamma(a, 2, 2)
+    Y.mean = mean(Y)
+    b = append(b, Y.mean)
+  }
+  return(b)
+}
+
+v = 1:9
+totalmean = pullXBinom(v * 10)
+totalpull = v * 10
+totalmean = append(totalmean, pullXBinom(v * 100))
+totalpull = append(totalpull, v * 100)
+totalmean = append(totalmean, pullXBinom(v * 1000))
+totalpull = append(totalpull, v * 1000)
+totalmean = append(totalmean, pullXBinom(10000))
+totalpull = append(totalpull, 10000)
+
+plot(totalpull, totalmean, type="l", main="binomial")
+
+totalmean2 = pullYGamma(v * 10)
+totalpull2 = v * 10
+totalmean2 = append(totalmean2, pullYGamma(v * 100))
+totalpull2 = append(totalpull2, v * 100)
+totalmean2 = append(totalmean2, pullYGamma(v * 1000))
+totalpull2 = append(totalpull2, v * 1000)
+totalmean2 = append(totalmean2, pullYGamma(10000))
+totalpull2 = append(totalpull2, 10000)
+
+plot(totalpull2, totalmean2, type="l", main="gamma")
+```
+
+Som vi ser så närmar sig graferna de värden som beräknades i a) för respektive fördelning.
