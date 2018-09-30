@@ -2,12 +2,17 @@
 title: "TDAB01 - Laboration 1"
 author: "sambl126, johfa688"
 date: "18 September 2018"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
+\usepackage[latin9]{inputenc}
+\usepackage[T1]{fontenc}
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd("/home/sambl126/TDAB01/TDAB01/lab1/R")
+
+#setwd("/home/sambl126/TDAB01/TDAB01/lab1/R")
 ```
 
 ## Uppgift 1
@@ -470,8 +475,8 @@ Y = rexp(n, rate)
 Z = rbinom(n, size, p)
 
 hist(X, col="blue", ylim = c(0, 1000))
-hist(Y, col="red", add=TRUE)
-hist(Z, col="green", add=TRUE)
+hist(Y, col="red", ylim = c(0, 1000))
+hist(Z, col="green", ylim = c(0, 1000))
 ```
 
 ### b)
@@ -558,3 +563,5 @@ hist(Z1, col="blue", ylim = c(0, 250), main = paste("30 (blue), 100 (cyan) and 1
 hist(Z2, col="cyan",add = TRUE)
 hist(Z3, col="green",add = TRUE)
 ```
+
+Eftersom de verkar konvergera mot ett bestämt värde med fler samplingar så skulle en bernoullifördelning föreslås som fördelning. Utifrån graferna så har då X-grafen smalnat av snabbast och stigit snabbast med ökningen, och därmed skulle X föreslås som den snabbast konvergerande. 
