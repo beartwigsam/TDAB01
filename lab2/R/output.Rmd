@@ -106,10 +106,121 @@ plot(v5, xlab = "Mu index")
 plot(v6, xlab = "Mu index")
 
 
-hist(dgamma(x1, shape = alpha.values[which.max(v3)], scale = beta.values[which.max(v1)]), xlab = "f(x)", main = "gamma x1",)
-hist(dgamma(x2, shape = alpha.values[which.max(v4)], scale = beta.values[which.max(v2)]), xlab = "f(x)", main = "gamma x2")
-hist(dnorm(x1, mean = mu.values[which.max(v5)], sd = 1), xlab = "f(x)", main = "normal x1")
-hist(dnorm(x2, mean = mu.values[which.max(v6)], sd = 1), xlab = "f(x)", main = "normal x2")
-hist(x1)
-hist(x2)
+
+hist(x1, probability = TRUE, main = "gamma x1", ylim=c(0,0.5))
+xfit <- seq(min(x1), max(x1), length.out = length(x1))
+yfit <- dgamma(xfit, shape = alpha.values[which.max(v3)], scale = beta.values[which.max(v1)])
+lines(xfit, yfit, col="blue", lwd=2)
+
+hist(x2, probability = TRUE, main = "gamma x2", ylim=c(0,0.5))
+xfit <- seq(min(x2), max(x2), length.out = length(x2))
+yfit <- dgamma(xfit, shape = alpha.values[which.max(v4)], scale = beta.values[which.max(v2)])
+lines(xfit, yfit, col="blue", lwd=2)
+
+hist(x1, probability = TRUE, main = "normal x1", ylim=c(0,0.5))
+xfit <- seq(min(x1), max(x1), length.out = length(x1))
+yfit <- dnorm(xfit, mean = mu.values[which.max(v5)], sd = 1)
+lines(xfit, yfit, col="blue", lwd=2)
+
+hist(x2, probability = TRUE, main = "normal x2", ylim=c(0,0.5))
+xfit <- seq(min(x2), max(x2), length.out = length(x2))
+yfit <- dnorm(xfit, mean = mu.values[which.max(v6)], sd = 1)
+lines(xfit, yfit, col="blue", lwd=2)
+
+hist(x1, probability = TRUE, ylim=c(0,0.5))
+xfit <- seq(min(x1), max(x1), length.out = length(x1))
+yfit <- dgamma(xfit, shape = 4, scale = 1)
+lines(xfit, yfit, col="blue", lwd=2)
+
+hist(x2, probability = TRUE, ylim=c(0,0.5))
+xfit <- seq(min(x2), max(x2), length.out = length(x2))
+yfit <- dgamma(xfit, shape = 4, scale = 1)
+lines(xfit, yfit, col="blue", lwd=2)
 ```
+Det vi ser är att gamma-modellerna är betydligt mer precisionssäkra i sin modellering. Detta är väl därför att originalfördelningen är just en gamma-modell.
+
+
+## Uppgift 2
+```{r}
+set.seed(4711)
+x1 <- rgamma(n = 10, shape = 4, scale = 1)
+x2 <- rgamma(n = 100, shape = 4, scale = 1)
+
+gamma_beta_mle <- function(x, alpha) {
+  return(length(x) * alpha * 1 / sum(x))
+}
+
+print(gamma_beta_mle(x = x1, alpha=4))
+print(gamma_beta_mle(x = x2, alpha=4))
+```
+
+En slutsats vi kan dra är att skattningen blir mer precisionssäker med fler datapunkter (x1 hade n=10 och x2 hade n=100). Vi vet ju redan att beta är 1 från början.
+
+## Upggift 3
+
+### a)
+```{r}
+norm_mu_mle <- function(x) {
+  return(mean(x))
+}
+
+norm_sigma2_mle <- function(x) {
+  return((1/length(x)) * sum((x - mean(x))^2))
+}
+
+test_x <- 1:10
+norm_mu_mle(x = test_x)
+norm_sigma2_mle(x = test_x)
+```
+
+### b)
+```{r}
+set.seed(42)
+y1 = rnorm(10, mean = 10, sd = 2)
+y2 = rnorm(10000, mean = 10, sd = 2)
+
+norm_mu_mle(y1)
+norm_mu_mle(y2)
+norm_sigma2_mle(y1)
+norm_sigma2_mle(y2)
+```
+
+10000 dragningar är betydligt närmare de riktiga värdena.
+
+
+## Uppgift 4
+
+### a)
+```{r}
+beta1_mle = vector(length = 2000)
+beta2_mle = vector(length = 2000)
+mu1 = vector(length = 2000)
+mu2 = vector(length = 2000)
+sigma1 = vector(length = 2000)
+sigma2 = vector(length = 2000)
+v = 1:2000
+for(i in v) {
+  x1 <- rgamma(10, shape = 4, scale = 1)
+  x2 <- rgamma(10000, shape = 4, scale = 1)
+  beta1_mle[i] = gamma_beta_mle(x = x1, alpha = 4)
+  beta2_mle[i] = gamma_beta_mle(x = x2, alpha = 4)
+  
+  y1 <- rnorm(10, mean = 10, sd = 2)
+  y2 <- rnorm(10000, mean = 10, sd = 2)
+  mu1[i] = norm_mu_mle(x = y1)
+  mu2[i] = norm_mu_mle(x = y2)
+  sigma1[i] = norm_sigma2_mle(x = y1)
+  sigma2[i] = norm_sigma2_mle(x = y2)
+}
+
+hist(beta1_mle, col="red")
+hist(mu1, col="red")
+hist(sigma1, col="red")
+
+hist(beta2_mle, col="blue")
+hist(mu2, col="blue")
+hist(sigma2, col="blue")
+```
+
+Utifrån beta1_mle:
+Beta-värdet ska ligga på 1. I diagrammet med 10 utdragningar ligger toppen rätt till men avvikelsen liknar mer av den av en gamma-fördelning än en normalfördelning (lång svans). Diagrammet med 10000 dragningar liknar betydligt mer en normalfördelning. Denna observation finner vi även i de andra parameterskattningarna. Därför blir slutsatsen att fler samplingar leder till en normalfördelning runt det rätta värdet på parametern, d.v.s. uppfyller bättre den Centrala gränsvärdessatsen.

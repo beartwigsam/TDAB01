@@ -62,9 +62,33 @@ plot(v5, xlab = "Mu index")
 plot(v6, xlab = "Mu index")
 
 
-hist(dgamma(x1, shape = alpha.values[which.max(v3)], scale = beta.values[which.max(v1)]), xlab = "f(x)", main = "gamma x1",)
-hist(dgamma(x2, shape = alpha.values[which.max(v4)], scale = beta.values[which.max(v2)]), xlab = "f(x)", main = "gamma x2")
-hist(dnorm(x1, mean = mu.values[which.max(v5)], sd = 1), xlab = "f(x)", main = "normal x1")
-hist(dnorm(x2, mean = mu.values[which.max(v6)], sd = 1), xlab = "f(x)", main = "normal x2")
-hist(x1)
-hist(x2)
+
+hist(x1, probability = TRUE, main = "gamma x1", ylim=c(0,0.5))
+xfit <- seq(min(x1), max(x1), length.out = length(x1))
+yfit <- dgamma(xfit, shape = alpha.values[which.max(v3)], scale = beta.values[which.max(v1)])
+lines(xfit, yfit, col="blue", lwd=2)
+
+hist(x2, probability = TRUE, main = "gamma x2", ylim=c(0,0.5))
+xfit <- seq(min(x2), max(x2), length.out = length(x2))
+yfit <- dgamma(xfit, shape = alpha.values[which.max(v4)], scale = beta.values[which.max(v2)])
+lines(xfit, yfit, col="blue", lwd=2)
+
+hist(x1, probability = TRUE, main = "normal x1", ylim=c(0,0.5))
+xfit <- seq(min(x1), max(x1), length.out = length(x1))
+yfit <- dnorm(xfit, mean = mu.values[which.max(v5)], sd = 1)
+lines(xfit, yfit, col="blue", lwd=2)
+
+hist(x2, probability = TRUE, main = "normal x2", ylim=c(0,0.5))
+xfit <- seq(min(x2), max(x2), length.out = length(x2))
+yfit <- dnorm(xfit, mean = mu.values[which.max(v6)], sd = 1)
+lines(xfit, yfit, col="blue", lwd=2)
+
+hist(x1, probability = TRUE, ylim=c(0,0.5))
+xfit <- seq(min(x1), max(x1), length.out = length(x1))
+yfit <- dgamma(xfit, shape = 4, scale = 1)
+lines(xfit, yfit, col="blue", lwd=2)
+
+hist(x2, probability = TRUE, ylim=c(0,0.5))
+xfit <- seq(min(x2), max(x2), length.out = length(x2))
+yfit <- dgamma(xfit, shape = 4, scale = 1)
+lines(xfit, yfit, col="blue", lwd=2)
