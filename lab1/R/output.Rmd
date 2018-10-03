@@ -2,12 +2,17 @@
 title: "TDAB01 - Laboration 1"
 author: "sambl126, johfa688"
 date: "18 September 2018"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
+\usepackage[latin9]{inputenc}
+\usepackage[T1]{fontenc}
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd("/home/sambl126/TDAB01/TDAB01/lab1/R")
+
+#setwd("/home/sambl126/TDAB01/TDAB01/lab1/R")
 ```
 
 ## Uppgift 1
@@ -286,18 +291,16 @@ simXY(100000)
 simXY(1000000)
 ```
 
-## a)
-
-## b)
+### b)
 Vi tror att den närmar sig 2 * pi.
 
-## c)
+### c)
 Oscillationerna verkar avta med fler samplingar d.v.s. differensen mellan talen blir mindre.
 
-## d)
+### d)
 Integralen ger oss: [x^3 / 3](0 till 2) = 8/3 - 0 = 8/3
 
-## e)
+### e)
 Approximationen ges av: 
 ```{r}
 X <- runif(100000, 0, 2)
@@ -309,7 +312,7 @@ Vilket är nära 8/3.
 
 ## Uppgift 8
 
-## a)
+### a)
 Binomialfördelning:
 ```{r}
 n = 10
@@ -324,7 +327,7 @@ beta = 2
 print(alpha/beta)
 ```
 
-## b)
+### b)
 ```{r}
 pullXBinom <- function(a.a){
   b = vector()
@@ -371,3 +374,194 @@ plot(totalpull2, totalmean2, type="l", main="gamma")
 ```
 
 Som vi ser så närmar sig graferna de värden som beräknades i a) för respektive fördelning.
+
+## Uppgift 9
+
+### a)
+
+#### Exponentialfördelning
+Väntevärde: lambda^(⁻1) (eller Beta)
+Varians:    lambda^(-2) (eller Beta^2)
+
+I detta fall: 10⁻¹ = 1/10 och 10⁻² = 1/100
+
+#### Poissonfördelning
+Väntevärde och varians: lambda
+
+I detta fall: 3 och 3.
+
+### b)
+Beräkningar för dessa:
+```{R}
+n       = 10000
+rateX   = 10
+lambdaY = 3
+X = rexp(n, rateX)
+Y = rpois(n, lambdaY)
+
+# Väntevärde och varians för X
+# Bör vara ~1/10 och ~1/100 respektive.
+print(mean(X))
+print(var(X))
+
+# Väntevärde och varians i Y
+# Bör vara ~3 vardera.
+print(mean(Y))
+print(var(Y))
+
+```
+
+### c)
+
+#### 1.
+E(3) = 3
+
+#### 2.
+E(3X + 2) = 3E(X) + 2 = 3*1/10 + 2 = 23/10
+
+#### 3.
+E(X + Y) = E(X) + E(Y) = 1/10 + 3 = 31/10
+
+#### 4.
+(x := gånger)
+E(X x Y) = E(X) x E(Y) = 1/10 x 3 = 3/10
+
+#### 5.
+E(3 x X + 2 x Y - 3) = 3/10 + 6 - 3 = 33/10
+
+#### 6.
+Var(2 x X - 5) = 2² x Var(X) = 4 x 1/100 = 4/100 = 1/25
+
+#### 7.
+Var(X + Y) = Var(X) + Var(Y) = 1/100 + 3 = 301/100
+
+### d)
+```{R}
+n       = 10000
+rateX   = 10
+lambdaY = 3
+X = rexp(n, rateX)
+Y = rpois(n, lambdaY)
+
+# 1.
+print(mean(3))
+# 2.
+print(mean((3 * X) + 2))
+# 3.
+print(mean(X + Y))
+# 4.
+print(mean(X * Y))
+# 5.
+print(mean((3*X) + (2*Y) -3))
+# 6.
+print(var((2*X)-5))
+# 7.
+print(var(X + Y))
+```
+
+
+## Uppgift 10
+
+### a)
+```{R}
+n       = 1000
+lambda  = 5
+rate    = 1
+size    = 10
+p       = 0.01
+
+X = rpois(n, lambda)
+Y = rexp(n, rate)
+Z = rbinom(n, size, p)
+
+hist(X, col="blue", ylim = c(0, 1000))
+hist(Y, col="red", ylim = c(0, 1000))
+hist(Z, col="green", ylim = c(0, 1000))
+```
+
+### b)
+```{R}
+n       = 1000
+lambda  = 5
+rate    = 1
+X       = rpois(n, lambda)
+Y       = rexp(n, rate)
+
+# Makes a given number of pulls from Z, where every pull is
+#  a mean value of 10 samples from Z.
+# These pulls are then returned as a vector.
+meanOf10 <- function(pulls, Z) {
+  v = vector(length=1000)
+  m = 0
+  
+  for(i in 1:1000) {
+    m = 0
+    for(j in 1:pulls) {
+      m = m + sample(Z, 1)
+    }
+    m = m/pulls
+    v[i] = m
+  }
+  return(v)
+}
+
+Xhat = meanOf10(10, X)
+Yhat = meanOf10(10, Y)
+
+hist(Xhat, xlim = c(0, 8), ylim = c(0, 250), col="blue", main = paste("X (blue) and Y (red)"))
+hist(Yhat, add=TRUE, col="red")
+```
+
+### c)
+```{R}
+n       = 1000
+lambda  = 5
+rate    = 1
+size    = 10
+p       = 0.01
+
+X = rpois(n, lambda)
+Y = rexp(n, rate)
+Z = rbinom(n, size, p)
+
+# Makes a given number of pulls from Z, where every pull is
+#  a mean value of 10 samples from Z.
+# These pulls are then returned as a vector.
+meanOf10 <- function(pulls, Z) {
+  v = vector(length=1000)
+  m = 0
+  
+  for(i in 1:1000) {
+    m = 0
+    for(j in 1:pulls) {
+      m = m + sample(Z, 1)
+    }
+    m = m/pulls
+    v[i] = m
+  }
+  return(v)
+}
+
+X1 = meanOf10(30, X)
+X2 = meanOf10(100, X)
+X3 = meanOf10(1000, X)
+hist(X1, col="blue", ylim = c(0, 250), breaks = 50, main = paste("30 (blue), 100 (cyan) and 1000 (green) pulls from X"))
+hist(X2, col="cyan",add = TRUE, breaks = 50)
+hist(X3, col="green",add = TRUE, breaks = 10) 
+
+Y1 = meanOf10(30, Y)
+Y2 = meanOf10(100, Y)
+Y3 = meanOf10(1000, Y)
+hist(Y1, col="blue", ylim = c(0, 250), breaks = 50, main = paste("30 (blue), 100 (cyan) and 1000 (green) pulls from Y"))
+hist(Y2, col="cyan",add = TRUE, breaks = 50)
+hist(Y3, col="green",add = TRUE, breaks = 10)
+
+Z1 = meanOf10(30, Z)
+Z2 = meanOf10(100, Z)
+Z3 = meanOf10(1000, Z)
+hist(Z1, col="blue", ylim = c(0, 250), main = paste("30 (blue), 100 (cyan) and 1000 (green) pulls from Z"))
+hist(Z2, col="cyan",add = TRUE)
+hist(Z3, col="green",add = TRUE)
+```
+
+Eftersom de verkar konvergera mot ett bestämt värde med fler samplingar så skulle en bernoullifördelning föreslås som fördelning. Utifrån graferna så har då X-grafen smalnat av snabbast och stigit snabbast med ökningen, och därmed skulle X föreslås som den snabbast konvergerande. 
